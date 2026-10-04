@@ -16,15 +16,10 @@
 \RequirePackage{subfiles}
 \RequirePackage{etoolbox}
 
-\geometry{twoside,inner=20mm,outer=45mm,top=35mm,bottom=35mm}
-
-% Keep the running head at the same physical position on every page:
-% 20 mm from both paper edges.  The text block remains 145 mm wide and is
-% shifted horizontally by the twoside inner/outer margins on alternate pages.
-% ltjsbook's headings page style already compensates for that shift when
-% \fullwidth - \textwidth equals the 25 mm odd/even shift.
-\setlength{\fullwidth}{\paperwidth}
-\addtolength{\fullwidth}{-40mm}
+\geometry{twoside,inner=25mm,outer=20mm,top=25mm,bottom=25mm}
+% Standard layout: keep ltjsbook's running-head width equal to the text block.
+% geometry recalculates \textwidth but does not update ltjsbook's \fullwidth.
+\setlength{\fullwidth}{\textwidth}
 
 % ============================================================
 % Drawing / graphics
@@ -85,6 +80,7 @@
 \RequirePackage{setspace}
 \RequirePackage{needspace}
 \RequirePackage[normalem]{ulem}
+\RequirePackage{lua-ul}
 % Keep underlines closer to Japanese text than ulem's font-dependent default.
 \setlength{\ULdepth}{2pt}
 % \RequirePackage{jumoline}
@@ -97,7 +93,6 @@
 \RequirePackage{enumitem}
 \RequirePackage{xcolor}
 \RequirePackage{here}
-\RequirePackage{titlesec}
 \RequirePackage{multirow}
 \RequirePackage{diagbox}
 \RequirePackage{caption}
@@ -107,13 +102,13 @@
   margin=2em,
   aboveskip=0.75em,
   belowskip=-0.5em,
-  font={small,stretch=1}
+  font={small,stretch=0.9}
 }
 \captionsetup[table]{
   margin=2em,
   aboveskip=0.125em,
   belowskip=-0.25em,
-  font={small,stretch=1}
+  font={small,stretch=0.9}
 }
 
 % ============================================================
@@ -368,7 +363,7 @@
 \setlength\intextsep{1em}
 
 \renewcommand{\arraystretch}{1.375}
-\renewcommand{\baselinestretch}{1}
+\renewcommand{\baselinestretch}{0.9}
 \setlength{\arraycolsep}{3pt}
 
 % Original pLaTeX-specific \narrowbaselines hook was removed.
@@ -445,7 +440,8 @@
 \let\oldmid\mid
 \renewcommand{\mid}{\!\oldmid\!}
 
-\newcommand{\relmiddle}[1]{\mathrel{}\!\middle#1\!\mathrel{}}
+% \newcommand{\relmiddle}[1]{\mathrel{}\,\middle#1\,\mathrel{}}
+\newcommand{\relmiddle}[1]{\,\middle#1\,}
 \newcommand{\oldrelmiddle}[1]{\mathrel{}\middle#1\mathrel{}}
 
 \let\oldparallel\parallel
@@ -531,7 +527,7 @@
 
 % Original jsbook-only \jsParagraphMark customization was removed.
 
-\newcommand{\kasen}[1]{\uline{#1}}
+\newcommand{\kasen}[1]{\underLine{#1}}
 
 \newcommand{\threespace}{\,\,\,}
 \newcommand{\emspace}{\mbox{　}}
@@ -706,7 +702,7 @@
 % Defaults
 % ============================================================
 
-\author{坪井 一馬}
+\author{著者名}
 \date{\today}
 
 \endinput

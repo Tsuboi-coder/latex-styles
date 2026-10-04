@@ -9,8 +9,8 @@
 役割を次のように分離しています。
 
 ```text
-TeX Live / LuaLaTeX       Docker image: kazuma-latex:2026
-フォント設定              latex-styles: texmf/tex/latex/kazuma/*.sty
+TeX Live / LuaLaTeX       Docker image: latex-env:2026
+フォント設定              latex-styles: texmf/tex/latex/latex-styles/*.sty
 macOS 標準フォント        host: /System/Library/Fonts
 コンテナからの参照先      container: /host-fonts/system
 LaTeX 文書                各プロジェクト
@@ -59,7 +59,7 @@ Docker Desktop の再起動後、次のコマンドを実行します。
 ```shell
 docker run --rm \
   -v "/System/Library/Fonts:/host-fonts/system:ro" \
-  kazuma-latex:2026 \
+  latex-env:2026 \
   ls "/host-fonts/system/ヒラギノ明朝 ProN.ttc" \
      "/host-fonts/system/ヒラギノ丸ゴ ProN W4.ttc" \
      "/host-fonts/system/ヒラギノ角ゴシック W6.ttc" \
@@ -116,8 +116,8 @@ Beamer の数式だけを serif にする設定は `\usefonttheme[onlymath]{seri
 
 スタイルは family name の自動検索に頼らず、`/host-fonts/system/` と実際の `.ttc` ファイル名を指定しています。設定を変更する場合は、次のファイルを編集します。
 
-- `texmf/tex/latex/kazuma/hiragino-base.sty`
-- `texmf/tex/latex/kazuma/hiragino-slides.sty`
+- `texmf/tex/latex/latex-styles/hiragino-base.sty`
+- `texmf/tex/latex/latex-styles/hiragino-slides.sty`
 
 ## リポジトリで管理する範囲
 

@@ -24,7 +24,7 @@ latex-styles ── tested against / requires ──> latex-env のビルド環�
 
 ```text
 latex-styles/
-├── texmf/tex/latex/kazuma/  # パッケージ本体
+├── texmf/tex/latex/latex-styles/  # パッケージ本体
 ├── examples/                # 書籍スタイルの使用例
 ├── tests/                   # 小さな動作確認文書
 └── docs/                    # フォント設定などの補足
@@ -70,10 +70,10 @@ GUI から起動した Visual Studio Code は、シェルで `export` した環�
 ```json
 {
   "name": "docker-lualatex",
-  "command": "/Users/kazuma/latex-env/scripts/latexmk-docker",
+  "command": "/absolute/path/to/latex-env/scripts/latexmk-docker",
   "env": {
-    "LATEX_IMAGE": "kazuma-latex:2026",
-    "LATEX_STYLES_ROOT": "/Users/kazuma/Documents/Repository/latex-styles/texmf"
+    "LATEX_IMAGE": "latex-env:2026",
+    "LATEX_STYLES_ROOT": "/absolute/path/to/latex-styles/texmf"
   },
   "args": [
     "-lualatex",

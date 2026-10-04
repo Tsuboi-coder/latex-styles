@@ -1,11 +1,11 @@
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{bookmacro-lua}[2026/09/04 LuaLaTeX book macro preset]
+\ProvidesPackage{bookmacro-lua-marginspecial-english}[2026/09/13 LuaLaTeX English book macro preset with wide outer margin]
 
 % ============================================================
 % Base / layout
 % ============================================================
 
-% フォントサイズ等に関する警告を出さない
+% Suppress harmless font-size substitution warnings.
 \RequirePackage{silence}
   \WarningFilter{latexfont}{Font shape}
   \WarningFilter{latexfont}{Size substitutions}
@@ -15,11 +15,16 @@
 \RequirePackage{fancyhdr}
 \RequirePackage{subfiles}
 \RequirePackage{etoolbox}
+\RequirePackage{fontspec}
 
-\geometry{twoside,inner=25mm,outer=20mm,top=25mm,bottom=25mm}
-% Standard layout: keep ltjsbook's running-head width equal to the text block.
-% geometry recalculates \textwidth but does not update ltjsbook's \fullwidth.
-\setlength{\fullwidth}{\textwidth}
+% Latin sans-serif text: Helvetica Neue
+\newcommand{\HiraginoFontPath}{/host-fonts/system/}
+\setsansfont[
+  Path = \HiraginoFontPath
+]{HelveticaNeue.ttc}
+
+\geometry{twoside,inner=20mm,outer=45mm,top=35mm,bottom=35mm}
+
 
 % ============================================================
 % Drawing / graphics
@@ -80,7 +85,6 @@
 \RequirePackage{setspace}
 \RequirePackage{needspace}
 \RequirePackage[normalem]{ulem}
-\RequirePackage{lua-ul}
 % Keep underlines closer to Japanese text than ulem's font-dependent default.
 \setlength{\ULdepth}{2pt}
 % \RequirePackage{jumoline}
@@ -93,22 +97,25 @@
 \RequirePackage{enumitem}
 \RequirePackage{xcolor}
 \RequirePackage{here}
+\RequirePackage{titlesec}
 \RequirePackage{multirow}
 \RequirePackage{diagbox}
 \RequirePackage{caption}
 \RequirePackage{placeins}
+\RequirePackage{tocloft}
+\RequirePackage{emptypage}
 
 \captionsetup{
   margin=2em,
   aboveskip=0.75em,
   belowskip=-0.5em,
-  font={small,stretch=0.9}
+  font={small,stretch=1}
 }
 \captionsetup[table]{
   margin=2em,
   aboveskip=0.125em,
   belowskip=-0.25em,
-  font={small,stretch=0.9}
+  font={small,stretch=1}
 }
 
 % ============================================================
@@ -118,9 +125,9 @@
 \RequirePackage[chapter]{algorithm}
 \RequirePackage{algpseudocode}
 
-\algnewcommand\algorithmicinput{{\bfseries 入力:}}
-\algnewcommand\algorithmicoutput{{\bfseries 出力:}}
-\algnewcommand\algorithmiccontent{{\bfseries アルゴリズム:}}
+\algnewcommand\algorithmicinput{{\bfseries Input:}}
+\algnewcommand\algorithmicoutput{{\bfseries Output:}}
+\algnewcommand\algorithmiccontent{{\bfseries Algorithm:}}
 \algnewcommand\AlgInput{\item[\algorithmicinput]}
 \algnewcommand\AlgOutput{\item[\algorithmicoutput]}
 \algnewcommand\AlgContent{\item[\algorithmiccontent]}
@@ -292,7 +299,7 @@
   title={#1}
 }
 
-\newtcbtheorem[number within=chapter]{defbox}{定義}{
+\newtcbtheorem[number within=chapter]{defbox}{Definition}{
   enhanced jigsaw,
   breakable,
   colback=white,
@@ -363,7 +370,7 @@
 \setlength\intextsep{1em}
 
 \renewcommand{\arraystretch}{1.375}
-\renewcommand{\baselinestretch}{0.9}
+\renewcommand{\baselinestretch}{1}
 \setlength{\arraycolsep}{3pt}
 
 % Original pLaTeX-specific \narrowbaselines hook was removed.
@@ -440,8 +447,7 @@
 \let\oldmid\mid
 \renewcommand{\mid}{\!\oldmid\!}
 
-% \newcommand{\relmiddle}[1]{\mathrel{}\,\middle#1\,\mathrel{}}
-\newcommand{\relmiddle}[1]{\,\middle#1\,}
+\newcommand{\relmiddle}[1]{\mathrel{}\!\middle#1\!\mathrel{}}
 \newcommand{\oldrelmiddle}[1]{\mathrel{}\middle#1\mathrel{}}
 
 \let\oldparallel\parallel
@@ -460,7 +466,6 @@
 
 \renewcommand{\thesubsubsection}{(\alph{subsubsection})}
 \renewcommand{\thefootnote}{*\arabic{footnote}}
-\setlength{\parindent}{0pt}
 
 % ============================================================
 % Title page
@@ -525,12 +530,43 @@
 \renewcommand{\thepart}{\arabic{part}}
 \setcounter{tocdepth}{2}
 
+% Keep the standard book sizes and spacing, but use sans serif for chapter
+% labels/titles and section titles.
+\titleformat{\chapter}[display]
+  {\normalfont\huge\sffamily\bfseries}
+  {\chaptertitlename\ \thechapter}{20pt}{\Huge}
+\titleformat{\section}
+  {\normalfont\Large\sffamily\bfseries}
+  {\thesection}{1em}{}
+
+% In the table of contents, the title and chapter-or-higher entries use sans
+% serif, while section-or-lower entries retain the roman family.
+\renewcommand{\cftpartfont}{\sffamily\bfseries}
+\renewcommand{\cftpartpagefont}{\sffamily\bfseries}
+\renewcommand{\cftchapfont}{\sffamily\bfseries}
+\renewcommand{\cftchappagefont}{\sffamily\bfseries}
+\renewcommand{\cftsecfont}{\rmfamily}
+\renewcommand{\cftsecpagefont}{\rmfamily}
+\renewcommand{\cftsubsecfont}{\rmfamily}
+\renewcommand{\cftsubsecpagefont}{\rmfamily}
+\renewcommand{\cftsubsubsecfont}{\rmfamily}
+\renewcommand{\cftsubsubsecpagefont}{\rmfamily}
+\renewcommand{\cfttoctitlefont}{\normalfont\Huge\sffamily\bfseries}
+
+% tocloft replaces \tableofcontents without the standard book class's
+% \chapter* call, so restore the open-right page break explicitly.
+\makeatletter
+\pretocmd{\@cfttocstart}{\cleardoublepage}{}{% 
+  \PackageWarning{bookmacro-lua-marginspecial-english}{Could not restore open-right TOC behavior}%
+}
+\makeatother
+
 % Original jsbook-only \jsParagraphMark customization was removed.
 
-\newcommand{\kasen}[1]{\underLine{#1}}
+\newcommand{\kasen}[1]{\uline{#1}}
 
 \newcommand{\threespace}{\,\,\,}
-\newcommand{\emspace}{\mbox{　}}
+\newcommand{\emspace}{\mbox{\quad}}
 
 \setlength{\fboxrule}{0.75pt}
 
@@ -539,7 +575,7 @@
 
 \newcommand{\frbox}[1]{\raisebox{-0.15em}{\framebox(3em,1em)[c]{#1}}}
 \newcommand{\questionframe}[1]{%
-  \,\setlength{\fboxsep}{0.05em}\fbox{　\raisebox{0em}[0.8em][0.1em]{\textbf{#1}}　}\,%
+  \,\setlength{\fboxsep}{0.05em}\fbox{\quad\raisebox{0em}[0.8em][0.1em]{\textbf{#1}}\quad}\,%
 }
 \newcommand{\choosingframe}[2]{%
   \,\setlength{\fboxsep}{0.1em}\fbox{\threespace\raisebox{0em}[1.6em][1em]{\textbf{#1}\threespace #2}}\,%
@@ -562,45 +598,27 @@
 \newcommand{\spacesi}[1]{\,\si{#1}}
 
 % ============================================================
-% Appendix in table of contents
-% Workaround for ltjsbook / TeX Live 2026
+% Running heads
 % ============================================================
 
-\makeatletter
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LE]{{\rmfamily\bfseries\thepage}\hfill{\rmfamily\leftmark}}
+\fancyhead[RO]{{\rmfamily\rightmark}\hfill{\rmfamily\bfseries\thepage}}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0pt}
 
-% 目次を読んでいるときに
-% 通常章か付録かを区別するためだけのフラグ
-\newif\ifappendixtoc
-\appendixtocfalse
-
-% 元の \appendix はそのまま生かす
-\let\bookmacro@oldappendix\appendix
-
-\renewcommand{\appendix}{%
-  \bookmacro@oldappendix
-  % .toc に「ここから付録」と記録
-  \addtocontents{toc}{\protect\appendixtoctrue}%
+\fancypagestyle{plain}{%
+  \fancyhf{}%
+  \fancyhead[LE]{\rmfamily\bfseries\thepage}%
+  \fancyhead[RO]{\rmfamily\bfseries\thepage}%
+  \renewcommand{\headrulewidth}{0pt}%
+  \renewcommand{\footrulewidth}{0pt}%
 }
 
-% TeX Live 2026 の ltjsbook では
-% \l@chapter 内で \numberline -> \numberline@chapter
-% に差し替えられるため、ここを付録対応にする
-\def\numberline@chapter#1{%
-  \ifappendixtoc
-    \numberline@orig{\appendixname#1}%
-  \else
-    \numberline@orig{\prechaptername#1\postchaptername}%
-  \fi
-}
-
-\makeatother
-
-% ヘッダ
 \makeatletter
 \renewcommand{\chaptermark}[1]{%
-  \markboth{%
-    \@chapapp\thechapter\@chappos.\quad #1%
-  }{}%
+  \markboth{\ifnum\value{secnumdepth}>-1 \@chapapp\ \thechapter.\quad\fi #1}{}%
 }
 \makeatother
 
@@ -625,37 +643,37 @@
 
 \newtheoremstyle{mystyle}
   {}{}{}{}{\sffamily}{}{ }
-  {\textbf{\thmnote{#3}}　}
+  {\textbf{\thmnote{#3}}\quad}
 \theoremstyle{mystyle}
-\newtheorem{rules}{法則}[chapter]
+\newtheorem{rules}{Rule}[chapter]
 
 \newtheoremstyle{mystyle2}
   {}{}{}{}{\sffamily}{}{ }
-  {\thmname{#1}\thmnumber{#2}.\ \textnormal{\textrm{(\thmnote{#3})}} }
+  {\thmname{#1}\,\thmnumber{#2}.\ \textnormal{\textrm{(\thmnote{#3})}} }
 \theoremstyle{mystyle2}
-\newtheorem{question}{問題}[chapter]
-\newtheorem{theorem}{定理}[chapter]
+\newtheorem{question}{Question}[chapter]
+\newtheorem{theorem}{Theorem}[chapter]
 
 \newtheoremstyle{mystyle3}
   {}{}{}{}{\sffamily}{}{ }
   {(\thmname{#1})\,}
 \theoremstyle{mystyle3}
-\newtheorem{kaihou}{解法}[chapter]
-\newtheorem{kaitou}{解答}[chapter]
+\newtheorem{kaihou}{Solution Method}[chapter]
+\newtheorem{kaitou}{Solution}[chapter]
 
 \newtheoremstyle{mystyle4}
   {}{}{}{}{\sffamily}{}{ }
-  {\thmname{#1}\thmnumber{#2}.\,\textnormal{\textrm{(\thmnote{#3})}}\,}
+  {\thmname{#1}\,\thmnumber{#2}.\,\textnormal{\textrm{(\thmnote{#3})}}\,}
 \theoremstyle{mystyle4}
-\newtheorem{definition}{定義}[chapter]
-\newtheorem{reference}{参考}[chapter]
+\newtheorem{definition}{Definition}[chapter]
+\newtheorem{reference}{Reference}[chapter]
 
 \newtheoremstyle{mystyle5}
   {}{}{}{}{\sffamily}{}{ }
   {\thmname{#1}. }
 \theoremstyle{mystyle5}
-\newtheorem{hosoku}{補足}[chapter]
-\newtheorem{column}{コラム}[chapter]
+\newtheorem{hosoku}{Supplement}[chapter]
+\newtheorem{column}{Column}[chapter]
 
 \newtheoremstyle{mystyle6}
   {}{}{\small}{}{\sffamily}{}{ }
@@ -665,13 +683,13 @@
 
 \newtheoremstyle{mystyle7}
   {}{}{\small}{}{\sffamily}{}{ }
-  {\thmname{#1}\thmnumber{#2}. }
+  {\thmname{#1}\,\thmnumber{#2}. }
 \theoremstyle{mystyle7}
-\newtheorem{Konkyo}{根拠}[chapter]
-\newtheorem{Dougubako}{道具箱}[chapter]
-\newtheorem{Gutairei}{具体例}[chapter]
-\newtheorem{Reidai}{例題}[chapter]
-\newtheorem{Jishuumondai}{自習問題}[chapter]
+\newtheorem{Konkyo}{Justification}[chapter]
+\newtheorem{Dougubako}{Toolbox}[chapter]
+\newtheorem{Gutairei}{Example}[chapter]
+\newtheorem{Reidai}{Worked Example}[chapter]
+\newtheorem{Jishuumondai}{Exercise}[chapter]
 
 \newenvironment{hutoji}{\sffamily}{}
 \newcommand{\head}[1]{%
@@ -702,7 +720,7 @@
 % Defaults
 % ============================================================
 
-\author{坪井 一馬}
+\author{Your Name}
 \date{\today}
 
 \endinput
