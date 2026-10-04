@@ -63,6 +63,31 @@ export LATEX_STYLES_ROOT="$HOME/Documents/Repository/latex-styles/texmf"
 \usepackage{bookmacro-lua}
 ```
 
+### Visual Studio Code / LaTeX Workshop
+
+GUI から起動した Visual Studio Code は、シェルで `export` した環境変数を引き継がない場合があります。LaTeX Workshop の `latex-workshop.latex.tools` で、`latex-env` のラッパーと本リポジトリの TEXMF ルートを明示してください。
+
+```json
+{
+  "name": "docker-lualatex",
+  "command": "/Users/kazuma/latex-env/scripts/latexmk-docker",
+  "env": {
+    "LATEX_IMAGE": "kazuma-latex:2026",
+    "LATEX_STYLES_ROOT": "/Users/kazuma/Documents/Repository/latex-styles/texmf"
+  },
+  "args": [
+    "-lualatex",
+    "-shell-escape",
+    "-synctex=1",
+    "-interaction=nonstopmode",
+    "-file-line-error",
+    "%DOCFILE_EXT%"
+  ]
+}
+```
+
+設定後は **Developer: Reload Window** を実行し、LaTeX Workshop の Docker 用レシピで再ビルドします。完全な `settings.json` と強制再ビルドの方法は、[`latex-env` のセットアップ手順](https://github.com/Tsuboi-coder/latex-env/blob/main/docs/setup.md#visual-studio-code)を参照してください。
+
 ## 動作確認
 
 以下は両リポジトリが現在の配置にある場合の例です。
