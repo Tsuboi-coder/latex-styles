@@ -1,0 +1,9 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{article1-class-ltjsarticle}[2026/10/06 ltjsarticle adapter for article1]
+
+% Keep the standard in-page title block, changing only the title family.
+\makeatletter
+\renewcommand{\title}[1]{\gdef\@title{\sffamily #1}}
+\makeatother
+
+\endinput

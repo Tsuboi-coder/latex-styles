@@ -1,0 +1,48 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{book1-title-page}[2026/10/06 Title page for book1]
+
+\makeatletter
+\def\subtitle#1{\def\@subtitle{#1}}
+\providecommand{\@subtitle}{}
+
+\renewcommand{\maketitle}{%
+  % Centre the 145 mm title-page content area independently of the
+  % asymmetric two-sided layout used by the main text.
+  \newgeometry{left=32.5mm,right=32.5mm,top=30mm,bottom=30mm}%
+  \begin{titlepage}%
+    \let\footnotesize\small
+    \let\footnoterule\relax
+    \parindent\z@
+    \null
+    \vskip 60\p@
+    \begin{tcolorbox}[
+      enhanced,
+      drop fuzzy shadow,
+      interior style={right color=blue!50!cyan,left color=blue},
+      coltext=white,
+      boxrule=0pt,
+      top=10pt,
+      bottom=10pt,
+      left=8pt,
+      right=8pt
+    ]
+      \centering
+      {\Large\sffamily \@subtitle\par}
+      \vspace{4pt}
+      {\LARGE\sffamily \@title\par}
+    \end{tcolorbox}
+    \vskip 20\p@
+    \begin{center}
+      {\Large \@date\par}
+      \vskip 15\p@
+      {\Large \@author\par}
+    \end{center}
+    \vfil
+    \null
+  \end{titlepage}%
+  \restoregeometry
+  \setcounter{footnote}{0}%
+}
+\makeatother
+
+\endinput

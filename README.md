@@ -25,7 +25,10 @@ latex-styles ── tested against / requires ──> latex-env のビルド環�
 ```text
 latex-styles/
 ├── texmf/tex/latex/latex-styles/  # パッケージ本体
-├── examples/                # 書籍スタイルの使用例
+├── examples/
+│   └── document/
+│       ├── book1/           # 書籍スタイルの使用例
+│       └── article1/        # 通常文書スタイルの使用例
 ├── tests/
 │   ├── document/            # 書籍・通常文書の動作確認
 │   └── beamer/              # Beamer の動作確認
@@ -37,6 +40,7 @@ latex-styles/
 | パッケージ | 用途 | macOS フォント |
 | --- | --- | --- |
 | `book1` | 日本語・英語書籍の言語、余白、フォントを組み合わせるプリセット | ヒラギノ、または Times New Roman + Helvetica Neue（`font=none` では不要） |
+| `article1` | 日本語・英語articleの言語、余白、フォントを組み合わせるプリセット | ヒラギノ、または Times New Roman + Helvetica Neue（`font=none` では不要） |
 | `hiragino-base` | 通常文書のヒラギノプリセット | 必要 |
 | `hiragino-slides` | Beamer のヒラギノプリセット | 必要 |
 | `beamer-design-ff-aug` | Frankfurt ベースの Beamer デザイン | 必要 |
@@ -64,7 +68,23 @@ export LATEX_STYLES_ROOT="$HOME/Documents/Repository/latex-styles/texmf"
 \usepackage[language=japanese,layout=standard]{book1}
 ```
 
-`book1` の `font=auto`（既定値）は、`language=japanese` ではヒラギノ、
+通常のarticleでは次のように読み込みます。タイトル、著者名、日付は本文1ページ目の冒頭に表示され、独立した表紙ページにはなりません。タイトルはサンセリフになり、英語ではHelvetica Neue、日本語ではヒラギノ角ゴシックを使用します。さらに英語設定では、partからsubparagraphまでの全見出しと、目次内のpart・section項目もHelvetica Neueになります。
+
+```tex
+\documentclass[11pt,a4paper]{article}
+\usepackage[language=english,layout=standard]{article1}
+
+\title{A Sample Article}
+\author{Author Name}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+\end{document}
+```
+
+`book1` と `article1` の `font=auto`（既定値）は、`language=japanese` ではヒラギノ、
 `language=english` では本文に Times New Roman、サンセリフに Helvetica Neue を設定します。
 数式フォントには本文フォントを適用せず、既定の Latin Modern 数式フォントを維持します。
 文書側でフォントを設定する場合は `font=none` を指定します。
@@ -105,16 +125,22 @@ cd "$HOME/Documents/Repository/latex-styles/tests/document"
 "$HOME/latex-env/scripts/latexmk-docker" -lualatex shared_style_math.tex
 "$HOME/latex-env/scripts/latexmk-docker" -lualatex book1_japanese_wide.tex
 "$HOME/latex-env/scripts/latexmk-docker" -lualatex book1_english_wide.tex
+"$HOME/latex-env/scripts/latexmk-docker" -lualatex article1_japanese_wide.tex
+"$HOME/latex-env/scripts/latexmk-docker" -lualatex article1_english_wide.tex
 
 cd ../beamer
 "$HOME/latex-env/scripts/latexmk-docker" -lualatex hiragino_beamer.tex
 
-cd ../../examples
+cd ../../examples/document/book1/11pt
 "$HOME/latex-env/scripts/latexmk-docker" -lualatex japanese_book.tex
 "$HOME/latex-env/scripts/latexmk-docker" -lualatex english_book.tex
+
+cd ../../article1/11pt
+"$HOME/latex-env/scripts/latexmk-docker" -lualatex japanese_article.tex
+"$HOME/latex-env/scripts/latexmk-docker" -lualatex english_article.tex
 ```
 
-サンプルのうち `japanese_book.tex` と `english_book.tex` は macOS フォントを参照します。必要なファイルと Docker Desktop の設定は [docs/hiragino-fonts.md](docs/hiragino-fonts.md) を参照してください。
+書籍・articleサンプルはmacOSフォントを参照します。必要なファイルとDocker Desktopの設定は [docs/hiragino-fonts.md](docs/hiragino-fonts.md) を参照してください。
 
 ## 互換性
 

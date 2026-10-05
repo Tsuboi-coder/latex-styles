@@ -1,0 +1,94 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{article1}[2026/10/06 Composable LuaLaTeX article preset]
+
+\RequirePackage{iftex}
+\ifLuaTeX\else
+  \PackageError{article1}{Compile with LuaLaTeX}{article1 supports LuaLaTeX only.}
+\fi
+
+\RequirePackage{kvoptions}
+\RequirePackage{etoolbox}
+
+\SetupKeyvalOptions{family=articleone,prefix=articleone@}
+\DeclareStringOption[japanese]{language}
+\DeclareStringOption[standard]{layout}
+\DeclareStringOption[auto]{font}
+\ProcessKeyvalOptions*
+
+% Reuse the language, layout, and font profiles shared with book1.
+\ifdefstring{\articleone@language}{japanese}{%
+  \RequirePackage{book1-language-ja}%
+}{%
+  \ifdefstring{\articleone@language}{english}{%
+    \RequirePackage{book1-language-en}%
+  }{%
+    \PackageError{article1}{Unsupported language `\articleone@language'}%
+      {Use language=japanese or language=english.}%
+    \RequirePackage{book1-language-ja}%
+  }%
+}
+
+\ifdefstring{\articleone@layout}{standard}{%
+  \RequirePackage{book1-layout-standard}%
+}{%
+  \ifdefstring{\articleone@layout}{wide}{%
+    \RequirePackage{book1-layout-wide}%
+  }{%
+    \PackageError{article1}{Unsupported layout `\articleone@layout'}%
+      {Use layout=standard or layout=wide.}%
+    \RequirePackage{book1-layout-standard}%
+  }%
+}
+
+\ifdefstring{\articleone@font}{auto}{%
+  \ifdefstring{\articleone@language}{english}{%
+    \RequirePackage{book1-font-helvetica-neue}%
+  }{%
+    \RequirePackage{book1-font-hiragino}%
+  }%
+}{%
+  \ifdefstring{\articleone@font}{none}{}{
+    \ifdefstring{\articleone@font}{hiragino}{%
+      \RequirePackage{book1-font-hiragino}%
+    }{%
+      \ifdefstring{\articleone@font}{helvetica-neue}{%
+        \RequirePackage{book1-font-helvetica-neue}%
+      }{%
+        \PackageError{article1}{Unsupported font profile `\articleone@font'}%
+          {Use font=auto, font=none, font=hiragino, or font=helvetica-neue.}%
+      }%
+    }%
+  }%
+}
+
+% Shared environments are numbered within sections in article documents.
+\newcommand{\bookoneCounterParent}{section}
+\newcommand{\bookoneCounterPrefix}{\thesection}
+\RequirePackage{book1-core}
+
+% Restore the standard article hierarchy after loading the shared core.
+% book1 keeps its existing alphabetic subsubsection numbering.
+\renewcommand{\thesubsubsection}{\thesubsection.\arabic{subsubsection}}
+
+\ifdefstring{\articleone@language}{english}{%
+  \RequirePackage{article1-headings-sans}%
+}{}
+
+\newif\ifarticleoneclasssupported
+\articleoneclasssupportedfalse
+\makeatletter
+\@ifclassloaded{ltjsarticle}{%
+  \RequirePackage{article1-class-ltjsarticle}%
+  \articleoneclasssupportedtrue
+}{}
+\@ifclassloaded{article}{%
+  \RequirePackage{article1-class-article}%
+  \articleoneclasssupportedtrue
+}{}
+\makeatother
+\ifarticleoneclasssupported\else
+  \PackageError{article1}{Unsupported document class}%
+    {Use the ltjsarticle or article document class.}
+\fi
+
+\endinput

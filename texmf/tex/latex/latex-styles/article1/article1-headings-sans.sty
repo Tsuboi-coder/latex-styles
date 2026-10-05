@@ -1,0 +1,34 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{article1-headings-sans}[2026/10/06 Sans-serif headings for English article1]
+
+\RequirePackage{titlesec}
+\RequirePackage{tocloft}
+
+% Use upper-case Roman numerals for parts in English article1 only.
+\renewcommand{\thepart}{\Roman{part}}
+
+% \part is not supported by titlesec's easy (starred) settings, so use the
+% explicit display form while preserving the standard article appearance.
+\titleformat{\part}[display]
+  {\normalfont\centering\sffamily\bfseries}
+  {\huge\partname\nobreakspace\thepart}
+  {20pt}
+  {\Huge}
+
+% Preserve the remaining class hierarchy and spacing while changing only
+% font families.
+\titleformat*{\section}{\normalfont\Large\sffamily\bfseries}
+\titleformat*{\subsection}{\normalfont\large\sffamily\bfseries}
+\titleformat*{\subsubsection}{\normalfont\normalsize\sffamily\bfseries}
+\titleformat*{\paragraph}{\normalfont\normalsize\sffamily\bfseries}
+\titleformat*{\subparagraph}{\normalfont\normalsize\sffamily\bfseries}
+
+% In the table of contents, keep subsection and lower entries serif while
+% setting the title, part entries, and section entries in the sans family.
+\renewcommand{\cfttoctitlefont}{\normalfont\Large\sffamily\bfseries}
+\renewcommand{\cftpartfont}{\sffamily\bfseries}
+\renewcommand{\cftpartpagefont}{\sffamily\bfseries}
+\renewcommand{\cftsecfont}{\sffamily\bfseries}
+\renewcommand{\cftsecpagefont}{\sffamily\bfseries}
+
+\endinput

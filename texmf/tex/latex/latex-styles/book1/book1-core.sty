@@ -110,7 +110,7 @@
 % Algorithms
 % ============================================================
 
-\RequirePackage[chapter]{algorithm}
+\RequirePackage{algorithm}
 \RequirePackage{algpseudocode}
 
 \algnewcommand\algorithmicinput{{\bfseries \bookoneLabelInput}}
@@ -268,7 +268,8 @@
 
 \makeatletter
 \AtBeginDocument{%
-  \renewcommand{\thelstlisting}{\thechapter.\arabic{lstlisting}}
+  \counterwithin{lstlisting}{\bookoneCounterParent}%
+  \renewcommand{\thelstlisting}{\bookoneCounterPrefix.\arabic{lstlisting}}
   \let\c@algorithm\c@lstlisting
   \let\thealgorithm\thelstlisting
   \renewcommand{\ALG@name}{\bookoneAlgorithmFloatName}
@@ -287,7 +288,7 @@
   title={#1}
 }
 
-\newtcbtheorem[number within=chapter]{defbox}{\bookoneLabelDefinition}{
+\newtcbtheorem[number within=\bookoneCounterParent]{defbox}{\bookoneLabelDefinition}{
   enhanced jigsaw,
   breakable,
   colback=white,
@@ -305,7 +306,7 @@
 
 \newtcolorbox[
   auto counter,
-  number within=chapter
+  number within=\bookoneCounterParent
 ]{rcbox}[2]{
   enhanced jigsaw,
   breakable,
@@ -458,64 +459,13 @@
 \bookoneLanguageParagraphSetup
 
 % ============================================================
-% Title page
-% ============================================================
-
-\makeatletter
-\def\subtitle#1{\def\@subtitle{#1}}
-\providecommand{\@subtitle}{}
-
-\renewcommand{\maketitle}{%
-  % Centre the 145 mm title-page content area independently of the
-  % asymmetric two-sided layout used by the main text.
-  \newgeometry{left=32.5mm,right=32.5mm,top=30mm,bottom=30mm}%
-  \begin{titlepage}%
-    \let\footnotesize\small
-    \let\footnoterule\relax
-    \parindent\z@
-    \null
-    \vskip 60\p@
-    \begin{tcolorbox}[
-      enhanced,
-      drop fuzzy shadow,
-      interior style={right color=blue!50!cyan,left color=blue},
-      coltext=white,
-      boxrule=0pt,
-      top=10pt,
-      bottom=10pt,
-      left=8pt,
-      right=8pt
-    ]
-      \centering
-      {\Large\sffamily \@subtitle\par}
-      \vspace{4pt}
-      {\LARGE\sffamily \@title\par}
-    \end{tcolorbox}
-    \vskip 20\p@
-    \begin{center}
-      {\Large \@date\par}
-      \vskip 15\p@
-      {\Large \@author\par}
-    \end{center}
-    \vfil
-    \null
-  \end{titlepage}%
-  \restoregeometry
-  \setcounter{footnote}{0}%
-}
-\makeatother
-
-% ============================================================
 % Numbering / headings
 % ============================================================
 
-\renewcommand{\thefigure}{\textrm{\thechapter.\arabic{figure}}}
-\renewcommand{\thetable}{\textrm{\thechapter.\arabic{table}}}
-
-\makeatletter
-\@addtoreset{section}{chapter}
-\@addtoreset{subsection}{section}
-\makeatother
+\counterwithin{figure}{\bookoneCounterParent}
+\counterwithin{table}{\bookoneCounterParent}
+\renewcommand{\thefigure}{\textrm{\bookoneCounterPrefix.\arabic{figure}}}
+\renewcommand{\thetable}{\textrm{\bookoneCounterPrefix.\arabic{table}}}
 
 \renewcommand{\thepart}{\arabic{part}}
 \setcounter{tocdepth}{2}
@@ -579,51 +529,51 @@
   {}{}{}{}{\sffamily}{}{ }
   {\textbf{\thmnote{#3}}\bookoneTheoremNoteGap}
 \theoremstyle{mystyle}
-\newtheorem{rules}{\bookoneLabelRule}[chapter]
+\newtheorem{rules}{\bookoneLabelRule}[\bookoneCounterParent]
 
 \newtheoremstyle{mystyle2}
   {}{}{}{}{\sffamily}{}{ }
   {\thmname{#1}\bookoneTheoremNameGap\thmnumber{#2}.\ \textnormal{\textrm{(\thmnote{#3})}} }
 \theoremstyle{mystyle2}
-\newtheorem{question}{\bookoneLabelQuestion}[chapter]
-\newtheorem{theorem}{\bookoneLabelTheorem}[chapter]
+\newtheorem{question}{\bookoneLabelQuestion}[\bookoneCounterParent]
+\newtheorem{theorem}{\bookoneLabelTheorem}[\bookoneCounterParent]
 
 \newtheoremstyle{mystyle3}
   {}{}{}{}{\sffamily}{}{ }
   {(\thmname{#1})\,}
 \theoremstyle{mystyle3}
-\newtheorem{kaihou}{\bookoneLabelSolutionMethod}[chapter]
-\newtheorem{kaitou}{\bookoneLabelSolution}[chapter]
+\newtheorem{kaihou}{\bookoneLabelSolutionMethod}[\bookoneCounterParent]
+\newtheorem{kaitou}{\bookoneLabelSolution}[\bookoneCounterParent]
 
 \newtheoremstyle{mystyle4}
   {}{}{}{}{\sffamily}{}{ }
   {\thmname{#1}\bookoneTheoremNameGap\thmnumber{#2}.\,\textnormal{\textrm{(\thmnote{#3})}}\,}
 \theoremstyle{mystyle4}
-\newtheorem{definition}{\bookoneLabelDefinition}[chapter]
-\newtheorem{reference}{\bookoneLabelReference}[chapter]
+\newtheorem{definition}{\bookoneLabelDefinition}[\bookoneCounterParent]
+\newtheorem{reference}{\bookoneLabelReference}[\bookoneCounterParent]
 
 \newtheoremstyle{mystyle5}
   {}{}{}{}{\sffamily}{}{ }
   {\thmname{#1}. }
 \theoremstyle{mystyle5}
-\newtheorem{hosoku}{\bookoneLabelSupplement}[chapter]
-\newtheorem{column}{\bookoneLabelColumn}[chapter]
+\newtheorem{hosoku}{\bookoneLabelSupplement}[\bookoneCounterParent]
+\newtheorem{column}{\bookoneLabelColumn}[\bookoneCounterParent]
 
 \newtheoremstyle{mystyle6}
   {}{}{\small}{}{\sffamily}{}{ }
   {\thmname{#1}\,\thmnumber{#2}. }
 \theoremstyle{mystyle6}
-\newtheorem{memo}{Memo}[chapter]
+\newtheorem{memo}{Memo}[\bookoneCounterParent]
 
 \newtheoremstyle{mystyle7}
   {}{}{\small}{}{\sffamily}{}{ }
   {\thmname{#1}\bookoneTheoremNameGap\thmnumber{#2}. }
 \theoremstyle{mystyle7}
-\newtheorem{Konkyo}{\bookoneLabelJustification}[chapter]
-\newtheorem{Dougubako}{\bookoneLabelToolbox}[chapter]
-\newtheorem{Gutairei}{\bookoneLabelExample}[chapter]
-\newtheorem{Reidai}{\bookoneLabelWorkedExample}[chapter]
-\newtheorem{Jishuumondai}{\bookoneLabelExercise}[chapter]
+\newtheorem{Konkyo}{\bookoneLabelJustification}[\bookoneCounterParent]
+\newtheorem{Dougubako}{\bookoneLabelToolbox}[\bookoneCounterParent]
+\newtheorem{Gutairei}{\bookoneLabelExample}[\bookoneCounterParent]
+\newtheorem{Reidai}{\bookoneLabelWorkedExample}[\bookoneCounterParent]
+\newtheorem{Jishuumondai}{\bookoneLabelExercise}[\bookoneCounterParent]
 
 \newenvironment{hutoji}{\sffamily}{}
 \newcommand{\head}[1]{%
@@ -637,7 +587,7 @@
   {}{}{}{}{\sffamily}{}{ }
   {\textbf{\thmnote{#3}}\,}
 \theoremstyle{mystyle8}
-\newtheorem{groupcontent}{}[chapter]
+\newtheorem{groupcontent}{}[\bookoneCounterParent]
 
 \newcommand{\countrev}[2]{%
   \newenvironment{#1}

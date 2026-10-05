@@ -63,7 +63,11 @@
   }%
 }
 
+% Shared environments are numbered within chapters in book documents.
+\newcommand{\bookoneCounterParent}{chapter}
+\newcommand{\bookoneCounterPrefix}{\thechapter}
 \RequirePackage{book1-core}
+\RequirePackage{book1-title-page}
 
 % Class-specific code is deliberately separate from the selected language.
 \newif\ifbookoneclasssupported
