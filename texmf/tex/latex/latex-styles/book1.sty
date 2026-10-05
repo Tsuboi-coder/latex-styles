@@ -1,0 +1,86 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{book1}[2026/10/06 Composable LuaLaTeX book preset]
+
+\RequirePackage{iftex}
+\ifLuaTeX\else
+  \PackageError{book1}{Compile with LuaLaTeX}{book1 supports LuaLaTeX only.}
+\fi
+
+\RequirePackage{kvoptions}
+\RequirePackage{etoolbox}
+
+\SetupKeyvalOptions{family=bookone,prefix=bookone@}
+\DeclareStringOption[japanese]{language}
+\DeclareStringOption[standard]{layout}
+\DeclareStringOption[auto]{font}
+\ProcessKeyvalOptions*
+
+% Language supplies labels and language-specific typography hooks.
+\ifdefstring{\bookone@language}{japanese}{%
+  \RequirePackage{book1-language-ja}%
+}{%
+  \ifdefstring{\bookone@language}{english}{%
+    \RequirePackage{book1-language-en}%
+  }{%
+    \PackageError{book1}{Unsupported language `\bookone@language'}%
+      {Use language=japanese or language=english.}%
+    \RequirePackage{book1-language-ja}%
+  }%
+}
+
+% Geometry is independent of language.
+\ifdefstring{\bookone@layout}{standard}{%
+  \RequirePackage{book1-layout-standard}%
+}{%
+  \ifdefstring{\bookone@layout}{wide}{%
+    \RequirePackage{book1-layout-wide}%
+  }{%
+    \PackageError{book1}{Unsupported layout `\bookone@layout'}%
+      {Use layout=standard or layout=wide.}%
+    \RequirePackage{book1-layout-standard}%
+  }%
+}
+
+% `auto' preserves the former language-specific font choices.
+\ifdefstring{\bookone@font}{auto}{%
+  \ifdefstring{\bookone@language}{english}{%
+    \RequirePackage{book1-font-helvetica-neue}%
+  }{%
+    \RequirePackage{book1-font-hiragino}%
+  }%
+}{%
+  \ifdefstring{\bookone@font}{none}{}{
+    \ifdefstring{\bookone@font}{hiragino}{%
+      \RequirePackage{book1-font-hiragino}%
+    }{%
+      \ifdefstring{\bookone@font}{helvetica-neue}{%
+        \RequirePackage{book1-font-helvetica-neue}%
+      }{%
+        \PackageError{book1}{Unsupported font profile `\bookone@font'}%
+          {Use font=auto, font=none, font=hiragino, or font=helvetica-neue.}%
+      }%
+    }%
+  }%
+}
+
+\RequirePackage{book1-core}
+
+% Class-specific code is deliberately separate from the selected language.
+\newif\ifbookoneclasssupported
+\bookoneclasssupportedfalse
+\makeatletter
+\@ifclassloaded{ltjsbook}{%
+  \RequirePackage{book1-class-ltjsbook}%
+  \bookoneclasssupportedtrue
+}{}
+\@ifclassloaded{book}{%
+  \RequirePackage{book1-class-book}%
+  \bookoneclasssupportedtrue
+}{}
+\makeatother
+\ifbookoneclasssupported\else
+  \PackageError{book1}{Unsupported document class}%
+    {Use the ltjsbook or book document class.}
+\fi
+
+\endinput

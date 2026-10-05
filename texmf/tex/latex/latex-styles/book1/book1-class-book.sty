@@ -1,0 +1,52 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{book1-class-book}[2026/10/06 Standard book class adapter for book1]
+
+\RequirePackage{titlesec}
+\RequirePackage{tocloft}
+\RequirePackage{emptypage}
+
+\titleformat{\chapter}[display]
+  {\normalfont\huge\sffamily\bfseries}
+  {\chaptertitlename\ \thechapter}{20pt}{\Huge}
+\titleformat{\section}
+  {\normalfont\Large\sffamily\bfseries}
+  {\thesection}{1em}{}
+
+\renewcommand{\cftpartfont}{\sffamily\bfseries}
+\renewcommand{\cftpartpagefont}{\sffamily\bfseries}
+\renewcommand{\cftchapfont}{\sffamily\bfseries}
+\renewcommand{\cftchappagefont}{\sffamily\bfseries}
+\renewcommand{\cftsecfont}{\rmfamily}
+\renewcommand{\cftsecpagefont}{\rmfamily}
+\renewcommand{\cftsubsecfont}{\rmfamily}
+\renewcommand{\cftsubsecpagefont}{\rmfamily}
+\renewcommand{\cftsubsubsecfont}{\rmfamily}
+\renewcommand{\cftsubsubsecpagefont}{\rmfamily}
+\renewcommand{\cfttoctitlefont}{\normalfont\Huge\sffamily\bfseries}
+
+\makeatletter
+\pretocmd{\@cfttocstart}{\cleardoublepage}{}{%
+  \PackageWarning{book1}{Could not restore open-right TOC behavior}%
+}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LE]{{\rmfamily\bfseries\thepage}\hfill{\rmfamily\leftmark}}
+\fancyhead[RO]{{\rmfamily\rightmark}\hfill{\rmfamily\bfseries\thepage}}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0pt}
+
+\fancypagestyle{plain}{%
+  \fancyhf{}%
+  \fancyhead[LE]{\rmfamily\bfseries\thepage}%
+  \fancyhead[RO]{\rmfamily\bfseries\thepage}%
+  \renewcommand{\headrulewidth}{0pt}%
+  \renewcommand{\footrulewidth}{0pt}%
+}
+
+\renewcommand{\chaptermark}[1]{%
+  \markboth{\ifnum\value{secnumdepth}>-1 \@chapapp\ \thechapter.\quad\fi #1}{}%
+}
+\makeatother
+
+\endinput

@@ -26,7 +26,9 @@ latex-styles ── tested against / requires ──> latex-env のビルド環�
 latex-styles/
 ├── texmf/tex/latex/latex-styles/  # パッケージ本体
 ├── examples/                # 書籍スタイルの使用例
-├── tests/                   # 小さな動作確認文書
+├── tests/
+│   ├── document/            # 書籍・通常文書の動作確認
+│   └── beamer/              # Beamer の動作確認
 └── docs/                    # フォント設定などの補足
 ```
 
@@ -34,8 +36,7 @@ latex-styles/
 
 | パッケージ | 用途 | macOS フォント |
 | --- | --- | --- |
-| `bookmacro-lua` | 日本語書籍の標準・広幅余白プリセット | 不要 |
-| `bookmacro-lua-english` | 英語書籍の標準・広幅余白プリセット | Helvetica Neue が必要 |
+| `book1` | 日本語・英語書籍の言語、余白、フォントを組み合わせるプリセット | ヒラギノ、または Times New Roman + Helvetica Neue（`font=none` では不要） |
 | `hiragino-base` | 通常文書のヒラギノプリセット | 必要 |
 | `hiragino-slides` | Beamer のヒラギノプリセット | 必要 |
 | `beamer-design-ff-aug` | Frankfurt ベースの Beamer デザイン | 必要 |
@@ -60,8 +61,13 @@ export LATEX_STYLES_ROOT="$HOME/Documents/Repository/latex-styles/texmf"
 文書からは通常のパッケージと同様に読み込めます。
 
 ```tex
-\usepackage{bookmacro-lua}
+\usepackage[language=japanese,layout=standard]{book1}
 ```
+
+`book1` の `font=auto`（既定値）は、`language=japanese` ではヒラギノ、
+`language=english` では本文に Times New Roman、サンセリフに Helvetica Neue を設定します。
+数式フォントには本文フォントを適用せず、既定の Latin Modern 数式フォントを維持します。
+文書側でフォントを設定する場合は `font=none` を指定します。
 
 ### Visual Studio Code / LaTeX Workshop
 
@@ -95,10 +101,15 @@ GUI から起動した Visual Studio Code は、シェルで `export` した環�
 ```shell
 export LATEX_STYLES_ROOT="$HOME/Documents/Repository/latex-styles/texmf"
 
-cd "$HOME/Documents/Repository/latex-styles/tests"
+cd "$HOME/Documents/Repository/latex-styles/tests/document"
 "$HOME/latex-env/scripts/latexmk-docker" -lualatex shared_style_math.tex
+"$HOME/latex-env/scripts/latexmk-docker" -lualatex book1_japanese_wide.tex
+"$HOME/latex-env/scripts/latexmk-docker" -lualatex book1_english_wide.tex
 
-cd ../examples
+cd ../beamer
+"$HOME/latex-env/scripts/latexmk-docker" -lualatex hiragino_beamer.tex
+
+cd ../../examples
 "$HOME/latex-env/scripts/latexmk-docker" -lualatex japanese_book.tex
 "$HOME/latex-env/scripts/latexmk-docker" -lualatex english_book.tex
 ```

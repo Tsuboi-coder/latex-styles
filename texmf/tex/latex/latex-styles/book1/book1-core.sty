@@ -1,11 +1,11 @@
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{bookmacro-lua-english}[2026/09/13 LuaLaTeX English book macro preset]
+\ProvidesPackage{book1-core}[2026/10/06 Shared implementation for book1]
 
 % ============================================================
 % Base / layout
 % ============================================================
 
-% Suppress harmless font-size substitution warnings.
+% フォントサイズ等に関する警告を出さない
 \RequirePackage{silence}
   \WarningFilter{latexfont}{Font shape}
   \WarningFilter{latexfont}{Size substitutions}
@@ -15,18 +15,6 @@
 \RequirePackage{fancyhdr}
 \RequirePackage{subfiles}
 \RequirePackage{etoolbox}
-\RequirePackage{fontspec}
-\RequirePackage{titlesec}
-\RequirePackage{tocloft}
-\RequirePackage{emptypage}
-
-% Latin sans-serif text: Helvetica Neue
-\newcommand{\HiraginoFontPath}{/host-fonts/system/}
-\setsansfont[
-  Path = \HiraginoFontPath
-]{HelveticaNeue.ttc}
-
-\geometry{twoside,inner=25mm,outer=20mm,top=25mm,bottom=25mm}
 
 % ============================================================
 % Drawing / graphics
@@ -109,13 +97,13 @@
   margin=2em,
   aboveskip=0.75em,
   belowskip=-0.5em,
-  font={small,stretch=1}
+  font={small,stretch=\bookoneCaptionStretch}
 }
 \captionsetup[table]{
   margin=2em,
   aboveskip=0.125em,
   belowskip=-0.25em,
-  font={small,stretch=1}
+  font={small,stretch=\bookoneCaptionStretch}
 }
 
 % ============================================================
@@ -125,9 +113,9 @@
 \RequirePackage[chapter]{algorithm}
 \RequirePackage{algpseudocode}
 
-\algnewcommand\algorithmicinput{{\bfseries Input:}}
-\algnewcommand\algorithmicoutput{{\bfseries Output:}}
-\algnewcommand\algorithmiccontent{{\bfseries Algorithm:}}
+\algnewcommand\algorithmicinput{{\bfseries \bookoneLabelInput}}
+\algnewcommand\algorithmicoutput{{\bfseries \bookoneLabelOutput}}
+\algnewcommand\algorithmiccontent{{\bfseries \bookoneLabelAlgorithm}}
 \algnewcommand\AlgInput{\item[\algorithmicinput]}
 \algnewcommand\AlgOutput{\item[\algorithmicoutput]}
 \algnewcommand\AlgContent{\item[\algorithmiccontent]}
@@ -283,7 +271,7 @@
   \renewcommand{\thelstlisting}{\thechapter.\arabic{lstlisting}}
   \let\c@algorithm\c@lstlisting
   \let\thealgorithm\thelstlisting
-  \renewcommand{\ALG@name}{Algorithm}
+  \renewcommand{\ALG@name}{\bookoneAlgorithmFloatName}
 }
 \makeatother
 
@@ -299,7 +287,7 @@
   title={#1}
 }
 
-\newtcbtheorem[number within=chapter]{defbox}{Definition}{
+\newtcbtheorem[number within=chapter]{defbox}{\bookoneLabelDefinition}{
   enhanced jigsaw,
   breakable,
   colback=white,
@@ -370,7 +358,7 @@
 \setlength\intextsep{1em}
 
 \renewcommand{\arraystretch}{1.375}
-\renewcommand{\baselinestretch}{1}
+\renewcommand{\baselinestretch}{\bookoneBaselineStretch}
 \setlength{\arraycolsep}{3pt}
 
 % Original pLaTeX-specific \narrowbaselines hook was removed.
@@ -467,6 +455,7 @@
 
 \renewcommand{\thesubsubsection}{(\alph{subsubsection})}
 \renewcommand{\thefootnote}{*\arabic{footnote}}
+\bookoneLanguageParagraphSetup
 
 % ============================================================
 % Title page
@@ -531,43 +520,12 @@
 \renewcommand{\thepart}{\arabic{part}}
 \setcounter{tocdepth}{2}
 
-% Keep the standard book sizes and spacing, but use sans serif for chapter
-% labels/titles and section titles.
-\titleformat{\chapter}[display]
-  {\normalfont\huge\sffamily\bfseries}
-  {\chaptertitlename\ \thechapter}{20pt}{\Huge}
-\titleformat{\section}
-  {\normalfont\Large\sffamily\bfseries}
-  {\thesection}{1em}{}
-
-% In the table of contents, the title and chapter-or-higher entries use sans
-% serif, while section-or-lower entries retain the roman family.
-\renewcommand{\cftpartfont}{\sffamily\bfseries}
-\renewcommand{\cftpartpagefont}{\sffamily\bfseries}
-\renewcommand{\cftchapfont}{\sffamily\bfseries}
-\renewcommand{\cftchappagefont}{\sffamily\bfseries}
-\renewcommand{\cftsecfont}{\rmfamily}
-\renewcommand{\cftsecpagefont}{\rmfamily}
-\renewcommand{\cftsubsecfont}{\rmfamily}
-\renewcommand{\cftsubsecpagefont}{\rmfamily}
-\renewcommand{\cftsubsubsecfont}{\rmfamily}
-\renewcommand{\cftsubsubsecpagefont}{\rmfamily}
-\renewcommand{\cfttoctitlefont}{\normalfont\Huge\sffamily\bfseries}
-
-% tocloft replaces \tableofcontents without the standard book class's
-% \chapter* call, so restore the open-right page break explicitly.
-\makeatletter
-\pretocmd{\@cfttocstart}{\cleardoublepage}{}{% 
-  \PackageWarning{bookmacro-lua-english}{Could not restore open-right TOC behavior}%
-}
-\makeatother
-
 % Original jsbook-only \jsParagraphMark customization was removed.
 
 \newcommand{\kasen}[1]{\underLine{#1}}
 
 \newcommand{\threespace}{\,\,\,}
-\newcommand{\emspace}{\mbox{\quad}}
+\newcommand{\emspace}{\mbox{\bookoneEmSpace}}
 
 \setlength{\fboxrule}{0.75pt}
 
@@ -576,7 +534,7 @@
 
 \newcommand{\frbox}[1]{\raisebox{-0.15em}{\framebox(3em,1em)[c]{#1}}}
 \newcommand{\questionframe}[1]{%
-  \,\setlength{\fboxsep}{0.05em}\fbox{\quad\raisebox{0em}[0.8em][0.1em]{\textbf{#1}}\quad}\,%
+  \,\setlength{\fboxsep}{0.05em}\fbox{\bookoneQuestionPad\raisebox{0em}[0.8em][0.1em]{\textbf{#1}}\bookoneQuestionPad}\,%
 }
 \newcommand{\choosingframe}[2]{%
   \,\setlength{\fboxsep}{0.1em}\fbox{\threespace\raisebox{0em}[1.6em][1em]{\textbf{#1}\threespace #2}}\,%
@@ -599,31 +557,6 @@
 \newcommand{\spacesi}[1]{\,\si{#1}}
 
 % ============================================================
-% Running heads
-% ============================================================
-
-\pagestyle{fancy}
-\fancyhf{}
-\fancyhead[LE]{{\rmfamily\bfseries\thepage}\hfill{\rmfamily\leftmark}}
-\fancyhead[RO]{{\rmfamily\rightmark}\hfill{\rmfamily\bfseries\thepage}}
-\renewcommand{\headrulewidth}{0.4pt}
-\renewcommand{\footrulewidth}{0pt}
-
-\fancypagestyle{plain}{%
-  \fancyhf{}%
-  \fancyhead[LE]{\rmfamily\bfseries\thepage}%
-  \fancyhead[RO]{\rmfamily\bfseries\thepage}%
-  \renewcommand{\headrulewidth}{0pt}%
-  \renewcommand{\footrulewidth}{0pt}%
-}
-
-\makeatletter
-\renewcommand{\chaptermark}[1]{%
-  \markboth{\ifnum\value{secnumdepth}>-1 \@chapapp\ \thechapter.\quad\fi #1}{}%
-}
-\makeatother
-
-% ============================================================
 % Local equation numbering environment
 % ============================================================
 
@@ -644,37 +577,37 @@
 
 \newtheoremstyle{mystyle}
   {}{}{}{}{\sffamily}{}{ }
-  {\textbf{\thmnote{#3}}\quad}
+  {\textbf{\thmnote{#3}}\bookoneTheoremNoteGap}
 \theoremstyle{mystyle}
-\newtheorem{rules}{Rule}[chapter]
+\newtheorem{rules}{\bookoneLabelRule}[chapter]
 
 \newtheoremstyle{mystyle2}
   {}{}{}{}{\sffamily}{}{ }
-  {\thmname{#1}\,\thmnumber{#2}.\ \textnormal{\textrm{(\thmnote{#3})}} }
+  {\thmname{#1}\bookoneTheoremNameGap\thmnumber{#2}.\ \textnormal{\textrm{(\thmnote{#3})}} }
 \theoremstyle{mystyle2}
-\newtheorem{question}{Question}[chapter]
-\newtheorem{theorem}{Theorem}[chapter]
+\newtheorem{question}{\bookoneLabelQuestion}[chapter]
+\newtheorem{theorem}{\bookoneLabelTheorem}[chapter]
 
 \newtheoremstyle{mystyle3}
   {}{}{}{}{\sffamily}{}{ }
   {(\thmname{#1})\,}
 \theoremstyle{mystyle3}
-\newtheorem{kaihou}{Solution Method}[chapter]
-\newtheorem{kaitou}{Solution}[chapter]
+\newtheorem{kaihou}{\bookoneLabelSolutionMethod}[chapter]
+\newtheorem{kaitou}{\bookoneLabelSolution}[chapter]
 
 \newtheoremstyle{mystyle4}
   {}{}{}{}{\sffamily}{}{ }
-  {\thmname{#1}\,\thmnumber{#2}.\,\textnormal{\textrm{(\thmnote{#3})}}\,}
+  {\thmname{#1}\bookoneTheoremNameGap\thmnumber{#2}.\,\textnormal{\textrm{(\thmnote{#3})}}\,}
 \theoremstyle{mystyle4}
-\newtheorem{definition}{Definition}[chapter]
-\newtheorem{reference}{Reference}[chapter]
+\newtheorem{definition}{\bookoneLabelDefinition}[chapter]
+\newtheorem{reference}{\bookoneLabelReference}[chapter]
 
 \newtheoremstyle{mystyle5}
   {}{}{}{}{\sffamily}{}{ }
   {\thmname{#1}. }
 \theoremstyle{mystyle5}
-\newtheorem{hosoku}{Supplement}[chapter]
-\newtheorem{column}{Column}[chapter]
+\newtheorem{hosoku}{\bookoneLabelSupplement}[chapter]
+\newtheorem{column}{\bookoneLabelColumn}[chapter]
 
 \newtheoremstyle{mystyle6}
   {}{}{\small}{}{\sffamily}{}{ }
@@ -684,13 +617,13 @@
 
 \newtheoremstyle{mystyle7}
   {}{}{\small}{}{\sffamily}{}{ }
-  {\thmname{#1}\,\thmnumber{#2}. }
+  {\thmname{#1}\bookoneTheoremNameGap\thmnumber{#2}. }
 \theoremstyle{mystyle7}
-\newtheorem{Konkyo}{Justification}[chapter]
-\newtheorem{Dougubako}{Toolbox}[chapter]
-\newtheorem{Gutairei}{Example}[chapter]
-\newtheorem{Reidai}{Worked Example}[chapter]
-\newtheorem{Jishuumondai}{Exercise}[chapter]
+\newtheorem{Konkyo}{\bookoneLabelJustification}[chapter]
+\newtheorem{Dougubako}{\bookoneLabelToolbox}[chapter]
+\newtheorem{Gutairei}{\bookoneLabelExample}[chapter]
+\newtheorem{Reidai}{\bookoneLabelWorkedExample}[chapter]
+\newtheorem{Jishuumondai}{\bookoneLabelExercise}[chapter]
 
 \newenvironment{hutoji}{\sffamily}{}
 \newcommand{\head}[1]{%
@@ -716,12 +649,5 @@
 \countrev{gutairei}{Gutairei}
 \countrev{reidai}{Reidai}
 \countrev{jishuumondai}{Jishuumondai}
-
-% ============================================================
-% Defaults
-% ============================================================
-
-\author{Your Name}
-\date{\today}
 
 \endinput

@@ -34,10 +34,14 @@ LaTeX 文書                各プロジェクト
 ls "/System/Library/Fonts/ヒラギノ明朝 ProN.ttc" \
    "/System/Library/Fonts/ヒラギノ丸ゴ ProN W4.ttc" \
    "/System/Library/Fonts/ヒラギノ角ゴシック W6.ttc" \
-   "/System/Library/Fonts/HelveticaNeue.ttc"
+   "/System/Library/Fonts/HelveticaNeue.ttc" \
+   "/System/Library/Fonts/Supplemental/Times New Roman.ttf" \
+   "/System/Library/Fonts/Supplemental/Times New Roman Bold.ttf" \
+   "/System/Library/Fonts/Supplemental/Times New Roman Italic.ttf" \
+   "/System/Library/Fonts/Supplemental/Times New Roman Bold Italic.ttf"
 ```
 
-4ファイルすべてが表示されることを確認してください。macOS のバージョンによって配置や名前が変わる可能性があるため、ファイル名は推測せず、実際の `/System/Library/Fonts` を確認します。
+8ファイルすべてが表示されることを確認してください。macOS のバージョンによって配置や名前が変わる可能性があるため、ファイル名は推測せず、実際の `/System/Library/Fonts` を確認します。
 
 > [!IMPORTANT]
 > 現在の設定が参照する角ゴシックは `ヒラギノ角ゴシック W6.ttc` です。`ヒラギノ角ゴシック ProN W6.ttc` ではありません。
@@ -63,27 +67,33 @@ docker run --rm \
   ls "/host-fonts/system/ヒラギノ明朝 ProN.ttc" \
      "/host-fonts/system/ヒラギノ丸ゴ ProN W4.ttc" \
      "/host-fonts/system/ヒラギノ角ゴシック W6.ttc" \
-     "/host-fonts/system/HelveticaNeue.ttc"
+     "/host-fonts/system/HelveticaNeue.ttc" \
+     "/host-fonts/system/Supplemental/Times New Roman.ttf" \
+     "/host-fonts/system/Supplemental/Times New Roman Bold.ttf" \
+     "/host-fonts/system/Supplemental/Times New Roman Italic.ttf" \
+     "/host-fonts/system/Supplemental/Times New Roman Bold Italic.ttf"
 ```
 
 これにより、Docker の共有設定とファイル名を同時に確認できます。
 
 ### 4. テスト文書をコンパイルする
 
-`latex-styles` のルートで環境変数を設定してから `tests/` に移動し、次を実行します。ラッパーのパスは `latex-env` の実際の配置に合わせて変更してください。
+`latex-styles` のルートで環境変数を設定してから各テストディレクトリに移動し、次を実行します。ラッパーのパスは `latex-env` の実際の配置に合わせて変更してください。
 
 ```shell
 export LATEX_STYLES_ROOT="$(pwd)/texmf"
-cd tests
+cd tests/document
 "$HOME/latex-env/scripts/latexmk-docker" -lualatex hiragino_document.tex
+
+cd ../beamer
 "$HOME/latex-env/scripts/latexmk-docker" -lualatex hiragino_beamer.tex
-cd ..
+cd ../..
 ```
 
 次の PDF を目視し、日本語と欧文のフォント、およびスライド内の数式が正しく表示されることを確認します。
 
-- `tests/hiragino_document.pdf`: 通常文書用プリセットの明朝、角ゴシック、Helvetica Neue
-- `tests/hiragino_beamer.pdf`: スライド用プリセットの丸ゴシック、太字、Helvetica Neue、数式
+- `tests/document/hiragino_document.pdf`: 通常文書用プリセットの明朝、角ゴシック、Helvetica Neue
+- `tests/beamer/hiragino_beamer.pdf`: スライド用プリセットの丸ゴシック、太字、Helvetica Neue、数式
 
 ## 文書からの利用方法
 
@@ -125,7 +135,7 @@ Beamer の数式だけを serif にする設定は `\usefonttheme[onlymath]{seri
 
 - `latex-env/scripts/latexmk-docker` の読み取り専用マウント設定
 - `hiragino-base.sty` と `hiragino-slides.sty`
-- `tests/hiragino_document.tex` と `tests/hiragino_beamer.tex`
+- `tests/document/hiragino_document.tex` と `tests/beamer/hiragino_beamer.tex`
 - このセットアップ手順
 
 一方、`.ttc`、`.ttf`、`.otf` などのフォントファイルはコピー、コミット、Docker イメージへの組み込みを行いません。各 Mac に正規にインストールされているファイルを、その Mac 上でのみマウントして利用します。

@@ -1,0 +1,31 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{book1-class-ltjsbook}[2026/10/06 ltjsbook adapter for book1]
+
+\bookoneApplyLtjsLayout
+
+% Record the point where appendices begin so ltjsbook can format the chapter
+% numbers in the table of contents correctly under TeX Live 2026.
+\makeatletter
+\newif\ifbookoneappendixtoc
+\bookoneappendixtocfalse
+\let\bookone@oldappendix\appendix
+\renewcommand{\appendix}{%
+  \bookone@oldappendix
+  \addtocontents{toc}{\protect\bookoneappendixtoctrue}%
+}
+\def\numberline@chapter#1{%
+  \ifbookoneappendixtoc
+    \numberline@orig{\appendixname#1}%
+  \else
+    \numberline@orig{\prechaptername#1\postchaptername}%
+  \fi
+}
+
+\renewcommand{\chaptermark}[1]{%
+  \markboth{%
+    \@chapapp\thechapter\@chappos.\quad #1%
+  }{}%
+}
+\makeatother
+
+\endinput

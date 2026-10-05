@@ -1,0 +1,20 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{book1-font-helvetica-neue}[2026/10/06 Times and Helvetica font profile for book1]
+
+% Establish Latin Modern math first, then replace text families only.
+\RequirePackage[no-math]{fontspec}
+\RequirePackage{lmodern}
+\newcommand{\BookOneFontPath}{/host-fonts/system/}
+\setmainfont{Times New Roman}[
+  Path = \BookOneFontPath Supplemental/,
+  Extension = .ttf,
+  UprightFont = *,
+  BoldFont = * Bold,
+  ItalicFont = * Italic,
+  BoldItalicFont = * Bold Italic
+]
+\setsansfont[
+  Path = \BookOneFontPath
+]{HelveticaNeue.ttc}
+
+\endinput

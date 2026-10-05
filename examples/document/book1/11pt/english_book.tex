@@ -1,6 +1,7 @@
 \documentclass[11pt,a4paper]{book}
 
-\usepackage{bookmacro-lua-english}
+% English labels, standard margins, Times body text, and Helvetica sans serif.
+\usepackage[language=english,layout=standard]{book1}
 
 \title{Introduction to Statistics}
 \subtitle{Theory and Applications}
@@ -51,6 +52,13 @@ Tommy Toppleton declared that he was sure of being elected; and I think he was s
 \section{Random Variables}
 
 A random variable assigns a numerical value to each outcome.
+
+\begin{equation}
+  \begin{aligned}
+    & \mathrm{E}\bracket{x} = x \\
+    & x = \ln\paren{\exp\paren{x}}
+  \end{aligned}
+\end{equation}
 
 \begin{definition}[Random Variable]
 A random variable is a measurable function from a sample space

@@ -1,0 +1,12 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{book1-layout-wide}[2026/10/06 Wide outer-margin layout for book1]
+
+\RequirePackage{geometry}
+\geometry{twoside,inner=20mm,outer=45mm,top=35mm,bottom=35mm}
+
+\newcommand{\bookoneApplyLtjsLayout}{%
+  \setlength{\fullwidth}{\paperwidth}%
+  \addtolength{\fullwidth}{-40mm}%
+}
+
+\endinput

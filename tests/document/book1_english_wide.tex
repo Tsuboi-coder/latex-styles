@@ -1,0 +1,35 @@
+\documentclass[11pt,a4paper,openright]{book}
+
+\usepackage[language=english,layout=wide]{book1}
+
+\title{book1 English Wide-Layout Test}
+\author{Test Author}
+
+\begin{document}
+
+\maketitle
+\chapter{Language and Layout}
+
+Regular body text. \textbf{Bold body text.}
+\textit{Italic body text.} \textbf{\textit{Bold italic body text.}}
+\textsf{Sans-serif text.}
+
+The text font must not leak into mathematics:
+\[
+  \exp(x)\,\mathrm{d}x
+  = \sum_{n=0}^{\infty}\frac{x^n}{n!}\,\mathrm{d}x.
+\]
+
+\begin{theorem}[Heading]
+This checks the English theorem heading and the wide outer margin.
+\end{theorem}
+
+\begin{algorithm}
+  \caption{Input and output headings}
+  \begin{algorithmic}
+    \AlgInput Value
+    \AlgOutput Result
+  \end{algorithmic}
+\end{algorithm}
+
+\end{document}
