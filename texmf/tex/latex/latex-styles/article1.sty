@@ -69,6 +69,7 @@
 % Restore the standard article hierarchy after loading the shared core.
 % book1 keeps its existing alphabetic subsubsection numbering.
 \renewcommand{\thesubsubsection}{\thesubsection.\arabic{subsubsection}}
+\setcounter{secnumdepth}{2}
 
 \ifdefstring{\articleone@language}{english}{%
   \RequirePackage{article1-headings-sans}%
