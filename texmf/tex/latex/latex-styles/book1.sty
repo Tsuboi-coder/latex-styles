@@ -81,6 +81,9 @@
   \RequirePackage{book1-class-book}%
   \bookoneclasssupportedtrue
 }{}
+\ifdefstring{\bookone@language}{english}{%
+  \RequirePackage{book1-headings-en}%
+}{}
 \makeatother
 \ifbookoneclasssupported\else
   \PackageError{book1}{Unsupported document class}%

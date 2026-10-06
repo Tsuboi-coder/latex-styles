@@ -1,0 +1,15 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{book1-headings-en}[2026/10/06 Sans-serif headings for English book1]
+
+\RequirePackage{titlesec}
+
+% Keep numbering through subsection only. Lower-level headings remain visible
+% but are deliberately unnumbered.
+\setcounter{secnumdepth}{2}
+
+\titleformat*{\subsection}{\normalfont\large\sffamily\bfseries}
+\titleformat*{\subsubsection}{\normalfont\normalsize\sffamily\bfseries}
+\titleformat*{\paragraph}{\normalfont\normalsize\sffamily\bfseries}
+\titleformat*{\subparagraph}{\normalfont\normalsize\sffamily\bfseries}
+
+\endinput

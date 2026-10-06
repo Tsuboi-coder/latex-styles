@@ -88,6 +88,8 @@ export LATEX_STYLES_ROOT="$HOME/Documents/Repository/latex-styles/texmf"
 `language=english` では本文に Times New Roman、サンセリフに Helvetica Neue を設定します。
 数式フォントには本文フォントを適用せず、既定の Latin Modern 数式フォントを維持します。
 文書側でフォントを設定する場合は `font=none` を指定します。
+英語版`book1`ではchapterからsubparagraphまでの見出しをHelvetica Neueとし、
+番号はsubsectionまで表示します。
 
 ### Visual Studio Code / LaTeX Workshop
 
